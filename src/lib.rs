@@ -1,3 +1,7 @@
+pub(crate) mod multilinear;
+pub(crate) mod sumcheck;
+pub(crate) mod transcript;
+
 use std::iter::{Product, Sum};
 use std::ops::{Add, Mul};
 
@@ -83,7 +87,6 @@ impl UnivariatePoly {
 
         // 2x -> [0, 2]
 
-
         // [1, 2, 3] -> [1, 3] -> [(x - 1), (x - 3)]
 
         // numerator
@@ -94,7 +97,7 @@ impl UnivariatePoly {
             .product();
 
         // denominator
-        let denominator = 1.0 /  numerator.evaluate(*x);
+        let denominator = 1.0 / numerator.evaluate(*x);
 
         numerator.scalar_mul(&denominator)
     }
@@ -150,7 +153,7 @@ impl Sum for UnivariatePoly {
 }
 
 impl Product for UnivariatePoly {
-    fn product<I: Iterator<Item=Self>>(iter: I) -> Self {
+    fn product<I: Iterator<Item = Self>>(iter: I) -> Self {
         let mut result = UnivariatePoly::new(vec![1.0]);
         for poly in iter {
             result = &result * &poly;
@@ -219,9 +222,6 @@ mod test {
         // f(x) = 2x
         // [(2, 4), (4, 8)]
         let maybe_2x = UnivariatePoly::interpolate(vec![2.0, 4.0], vec![4.0, 8.0]);
-        assert_eq!(
-            maybe_2x.coefficient,
-            vec![0.0, 2.0]
-        );
+        assert_eq!(maybe_2x.coefficient, vec![0.0, 2.0]);
     }
 }
